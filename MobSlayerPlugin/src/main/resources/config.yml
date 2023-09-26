@@ -1,0 +1,33 @@
+# Configuration file for MobSlayerPlugin
+
+easy:
+  - {mob: "ZOMBIE", min: 1, max: 10}
+  - {mob: "SKELETON", min: 1, max: 7}
+
+medium:
+  - {mob: "CREEPER", min: 3, max: 8}
+  - {mob: "SPIDER", min: 2, max: 6}
+
+hard:
+  - {mob: "ENDERMAN", min: 1, max: 4}
+  - {mob: "BLAZE", min: 2, max: 5}
+
+rewards:
+  easy:
+    xp: 100
+    money: 50
+    items:
+      - "diamond 1"
+      - "iron_sword"
+  medium:
+    xp: 200
+    money: 100
+    items:
+      - "emerald"
+      - "golden_apple"
+  hard:
+    xp: 300
+    money: 150
+    items:
+      - "diamond 2"
+      - "enchanted_book"
