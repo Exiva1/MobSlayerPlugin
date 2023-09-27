@@ -33,28 +33,28 @@ public class MobSlayerPlugin extends JavaPlugin {
         // Register the /task command
         getCommand("task").setExecutor(new TaskCommand(configManager, taskTracker));
 
-        // Register the /taskcheck command
-        getCommand("taskcheck").setExecutor(new CommandExecutor() {
+        // Register the /checktask command
+        getCommand("checktask").setExecutor(new CommandExecutor() {
             @Override
             public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-                if (args.length >= 1 && args[0].equalsIgnoreCase("check")) {
-                    if (sender instanceof Player) {
-                        Player player = (Player) sender;
-                        Task playerTask = taskTracker.getPlayerTask(player.getUniqueId());
-                        if (playerTask != null) {
-                            player.sendMessage("Task progress: " + playerTask.getCurrentAmount() + "/" + playerTask.getTargetAmount());
-                        } else {
-                            player.sendMessage("You don't have an active task.");
-                        }
+                if (sender instanceof Player) {
+                    Player player = (Player) sender;
+                    Task playerTask = taskTracker.getPlayerTask(player.getUniqueId());
+                    if (playerTask != null) {
+                        player.sendMessage("Current Task: Kill " + playerTask.getMobType());
+                        player.sendMessage("Progress: " + playerTask.getCurrentAmount() + "/" + playerTask.getTargetAmount());
                     } else {
-                        sender.sendMessage("This command can only be executed by players.");
+                        player.sendMessage("You don't have an active task.");
                     }
                 } else {
-                    sender.sendMessage("Usage: /taskcheck check");
+                    sender.sendMessage("This command can only be executed by players.");
                 }
                 return true;
             }
         });
+
+        // Register the /ms command
+        getCommand("ms").setExecutor(new MSCommand(this));
     }
 
     public ConfigurationManager getConfigManager() {
@@ -63,5 +63,28 @@ public class MobSlayerPlugin extends JavaPlugin {
 
     public TaskTracker getTaskTracker() {
         return taskTracker;
+    }
+
+    private class MSCommand implements CommandExecutor {
+        private final JavaPlugin plugin;
+
+        public MSCommand(JavaPlugin plugin) {
+            this.plugin = plugin;
+        }
+
+        @Override
+        public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+            if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
+                if (sender.hasPermission("mobslayer.reload")) {
+                    plugin.reloadConfig();
+                    sender.sendMessage("§aMobSlayerPlugin configuration reloaded!");
+                } else {
+                    sender.sendMessage("§cYou don't have permission to use this command.");
+                }
+                return true;
+            }
+            // You can add more sub-commands or a help message here if needed
+            return false;
+        }
     }
 }

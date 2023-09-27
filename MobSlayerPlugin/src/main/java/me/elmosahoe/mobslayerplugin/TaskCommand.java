@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class TaskCommand implements CommandExecutor {
 
@@ -49,20 +50,18 @@ public class TaskCommand implements CommandExecutor {
 
             try {
                 DifficultyLevel difficulty = DifficultyLevel.valueOf(difficultyStr);
-                List<Map<?, ?>> mobsForDifficulty = configManager.getMobsForDifficulty(difficulty);
+                Map<String, Object> mobsForDifficulty = configManager.getMobsForDifficulty(difficulty);
 
                 if (mobsForDifficulty.isEmpty()) {
                     player.sendMessage("No tasks available for " + difficulty + " difficulty.");
                 } else {
-                    // Randomly select a mob from the available mobs for the chosen difficulty
-                    Map<?, ?> selectedMob = mobsForDifficulty.get(new Random().nextInt(mobsForDifficulty.size()));
-
-                    String mobType = selectedMob.get("mob").toString();
-                    int minAmount = (int) selectedMob.get("min");
-                    int maxAmount = (int) selectedMob.get("max");
-
-                    // Generate a random target amount within the specified range
-                    int targetAmount = new Random().nextInt(maxAmount - minAmount + 1) + minAmount;
+                    // Convert the map values to a list of maps
+                    List<Map<?, ?>> mobList = mobsForDifficulty.values().stream().map(obj -> (Map<?, ?>) obj).collect(Collectors.toList());
+                    Map<?, ?> selectedMobMap = mobList.get(new Random().nextInt(mobList.size()));
+                    String mobType = (String) selectedMobMap.get("mob");
+                    int min = (int) selectedMobMap.get("min");
+                    int max = (int) selectedMobMap.get("max");
+                    int targetAmount = new Random().nextInt(max - min + 1) + min;
 
                     // Get the reward for the chosen difficulty
                     Reward reward = configManager.getRewardForDifficulty(difficulty);

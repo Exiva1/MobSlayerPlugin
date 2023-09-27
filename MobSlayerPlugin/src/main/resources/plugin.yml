@@ -1,7 +1,7 @@
 name: MobSlayerPlugin
 version: 1.0
 main: me.elmosahoe.mobslayerplugin.MobSlayerPlugin
-author: Elmo
+author: Elmo x ChatGPT
 description: A plugin that assigns tasks to players to slay mobs.
 
 commands:
@@ -9,9 +9,14 @@ commands:
     description: Assigns a new task based on the chosen difficulty.
     usage: /task <difficulty>
     permission: mobslayer.assign
-  taskcheck:
+  checktask:
     description: Checks your current task progress.
-    usage: /taskcheck
+    usage: /checktask
     permission: mobslayer.check
+  ms:
+    description: MobSlayerPlugin main command
+    usage: /<command>
+    aliases: [mobslayer, mobs]
+
 
 
